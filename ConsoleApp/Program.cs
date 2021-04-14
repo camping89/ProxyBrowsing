@@ -10,6 +10,13 @@ namespace ConsoleApp
     // https://stackoverflow.com/questions/60117232/selenium-google-login-block
     // https://stackoverflow.com/questions/59514049/unable-to-sign-into-google-with-selenium-automation-because-of-this-browser-or/60328992#60328992
     // https://gist.github.com/smartdev10/d7323163c8346c97a9625b18d04ebbc0
+    //
+    
+    // Options
+    // 1. Replace version of chrome driver (remove selenium web driver chrome driver by something separately
+    // 2. Fake user agent = chrome OR firefox (mozilla)
+    // 3. Use firefox driver (Selenium Firefox driver)
+    
     class Program
     {
         private const string _gmailUid = "tech.bifrost@gmail.com";
@@ -34,18 +41,19 @@ namespace ConsoleApp
             var localPort = proxyServer.AddEndpoint(auth);
             
             ChromeOptions options = new ChromeOptions();
-
+            
             // Configure the driver's proxy server to the local endpoint port
             //options.AddArguments("headless");
             options.AddArgument($"--proxy-server=127.0.0.1:{localPort}");
+            options.AddArgument("--start-maximized");
             options.AddArgument("--ignore-ssl-errors=yes");
             options.AddArgument("--ignore-certificate-errors");
-            options.AddArgument("--start-maximized");
             options.AddArgument("--disable-web-security");
             options.AddArgument("--allow-running-insecure-content");
+
             //options.AddArgument("--remote-debugging-port=9222");
             //options.AddArgument(@"user-data-dir=C:\users\campi\AppData\Local\Google\Chrome\User Data");
-            options.AddArgument(@"user-data-dir=F:\ChromeUserData");
+            //options.AddArgument(@"user-data-dir=F:\ChromeUserData");
 
             //options.AddArgument("--disable-popup-blocking");
             //options.AddArgument("--log-level=3"); // to shut the logging
@@ -79,7 +87,9 @@ namespace ConsoleApp
             // Create the driver
             var driver = new ChromeDriver(service, options);
 
-            // login into gmail using stackoverflow
+            driver.Navigate().GoToUrl("https://myip.com/");
+            await Task.Delay(1000);
+            //login into gmail using stackoverflow
             driver.Navigate().GoToUrl("https://stackoverflow.com/");
             await Task.Delay(1000);
             driver.FindElement(By.XPath("/html/body/header/div/ol[2]/li[2]/a[1]")).Click();
