@@ -25,6 +25,7 @@ namespace ConsoleApp
             //options.AddArguments("headless");
             options.AddArgument($"--proxy-server=127.0.0.1:{localPort}");
             //options.AddArgument("--start-maximized");
+
             options.AddArgument("--ignore-ssl-errors=yes");
             options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--disable-web-security");
@@ -32,6 +33,7 @@ namespace ConsoleApp
             options.AcceptInsecureCertificates = true;
             options.AddArgument("--disable-blink-features=AutomationControlled");
             options.AddArgument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Safari/537.36");
+            //options.AddArgument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36");
 
             //options.AddArgument("--remote-debugging-port=9222");
             //options.AddArgument(@"user-data-dir=C:\users\campi\AppData\Local\Google\Chrome\User Data");
