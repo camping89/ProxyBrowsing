@@ -22,17 +22,18 @@ namespace ConsoleApp
         private const string _gmailUid = "tech.bifrost@gmail.com";
         private const string _gmailPwd = "T7PKJ7vRn26fre";
 
-        static Task Main(string[] args)
+        static void Main(string[] args)
         {
             Console.WriteLine($"TestSeleniumProxyServer at {DateTime.Now}");
             var proxyAuth = new ProxyAuth("64.137.72.147", 65233, "proxy", "C4t8TyP");
 
             // Don't await, have multiple drivers at once using the local proxy server
-            //ChromeProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
-            GeckoProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
+            var driver = ChromeProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
+            //GeckoProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
             //StartSeleniumProxyServerFireFox(proxyServer, new ProxyAuth("64.137.72.147", 65233, "proxy", "C4t8TyP"));
             //StartSeleniumProxyServer(proxyServer, new ProxyAuth("64.137.72.147", 65233, "proxy", "C4t8TyP"));
-            while (true) { }
+            Console.ReadLine();
+            driver.Dispose();
         }
     }
 }

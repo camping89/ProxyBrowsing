@@ -13,7 +13,7 @@ namespace ConsoleApp
     /// </summary>
     public static class ChromeProxyDriver
     {
-        public static async Task Start(ProxyAuth auth, string gmailUid, string gmailPwd)
+        public static async Task<IWebDriver> Start(ProxyAuth auth, string gmailUid, string gmailPwd)
         {
             // Add a new local proxy server endpoint
             var proxyServer = new SeleniumProxyServer();
@@ -24,11 +24,14 @@ namespace ConsoleApp
             // Configure the driver's proxy server to the local endpoint port
             //options.AddArguments("headless");
             options.AddArgument($"--proxy-server=127.0.0.1:{localPort}");
-            options.AddArgument("--start-maximized");
+            //options.AddArgument("--start-maximized");
             options.AddArgument("--ignore-ssl-errors=yes");
             options.AddArgument("--ignore-certificate-errors");
             options.AddArgument("--disable-web-security");
             options.AddArgument("--allow-running-insecure-content");
+            options.AcceptInsecureCertificates = true;
+            options.AddArgument("--disable-blink-features=AutomationControlled");
+            options.AddArgument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Safari/537.36");
 
             //options.AddArgument("--remote-debugging-port=9222");
             //options.AddArgument(@"user-data-dir=C:\users\campi\AppData\Local\Google\Chrome\User Data");
@@ -38,7 +41,11 @@ namespace ConsoleApp
             //options.AddArgument("--log-level=3"); // to shut the logging
 
             // disable
+
+            options.AddExcludedArgument("remote-debugging-port");
+            options.AddExcludedArgument("--remote-debugging-port");
             options.AddExcludedArgument("enable-automation");
+            options.AddExcludedArgument("--enable-automation");
             options.AddAdditionalCapability("useAutomationExtension", false);
             //options.AddExcludedArgument("--remote-debugging-port");
             //options.AddExcludedArgument("--remote-debugging-port=9222");
@@ -65,11 +72,11 @@ namespace ConsoleApp
 
             // Create the driver
             var driver = new ChromeDriver(service, options);
+            driver.ExecuteScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
             try
             {
 
                 driver.Navigate().GoToUrl("https://stackoverflow.com/");
-                await Task.Delay(1000);
                 driver.FindElement(By.XPath("/html/body/header/div/ol[2]/li[2]/a[1]")).Click();
                 await Task.Delay(1000);
                 driver.FindElement(By.XPath(@"//*[@id='openid-buttons']/button[1]")).Click();
@@ -78,8 +85,8 @@ namespace ConsoleApp
                 await Task.Delay(5000);
 
                 // about to type password
-                //driver.FindElement(By.XPath(@"//*[@id='password']/div[1]/div/div[1]/input")).SendKeys(gmailPwd);
-                //driver.FindElement(By.XPath(@"//*[@id='passwordNext']/div/button/div[2]")).Click();
+                driver.FindElement(By.XPath(@"//*[@id='password']/div[1]/div/div[1]/input")).SendKeys(gmailPwd);
+                driver.FindElement(By.XPath(@"//*[@id='passwordNext']/div/button/div[2]")).Click();
 
                 //var js = (IJavaScriptExecutor)driver;
                 //string title2 = (string)js.ExecuteScript($"document.title = '{auth.Proxy}:{auth.Port}'");
@@ -97,9 +104,10 @@ namespace ConsoleApp
             }
             finally
             {
-
-                driver.Dispose();
+                //driver.Dispose();
             }
+
+            return driver;
         }
     }
 }

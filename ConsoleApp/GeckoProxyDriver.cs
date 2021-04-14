@@ -42,7 +42,6 @@ namespace ConsoleApp
                 driver.FindElement(By.XPath(@"//*[@id='identifierNext']/div/button/div[2]")).Click();
                 await Task.Delay(5000);
                 //var cookies = driver.Manage().Cookies.AllCookies;
-                await Task.Delay(10000);
             }
             catch (Exception e)
             {
@@ -51,7 +50,7 @@ namespace ConsoleApp
             }
             finally
             {
-                //driver.Dispose();
+                driver.Dispose();
             }
         }
     }
