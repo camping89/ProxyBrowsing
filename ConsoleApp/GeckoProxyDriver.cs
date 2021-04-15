@@ -28,19 +28,30 @@ namespace ConsoleApp
             options.SetPreference("network.proxy.http", "127.0.0.1");
             options.SetPreference("network.proxy.http_port", localPort);
 
+
+            options.SetPreference("dom.webdriver.enabled", false);
+            options.SetPreference("useAutomationExtension", false);
+
             //var service = FirefoxDriverService.CreateDefaultService();
             var service = FirefoxDriverService.CreateDefaultService(".", "geckodriver.exe");
             var driver = new FirefoxDriver(service,options);
+
+            ((IJavaScriptExecutor)driver).ExecuteScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
+
             try
             {
                 driver.Navigate().GoToUrl("https://stackoverflow.com/");
-                await Task.Delay(1000);
                 driver.FindElement(By.XPath("/html/body/header/div/ol[2]/li[2]/a[1]")).Click();
                 await Task.Delay(1000);
                 driver.FindElement(By.XPath(@"//*[@id='openid-buttons']/button[1]")).Click();
                 driver.FindElement(By.XPath(@"//*[@id='identifierId']")).SendKeys(gmailUid);
                 driver.FindElement(By.XPath(@"//*[@id='identifierNext']/div/button/div[2]")).Click();
                 await Task.Delay(5000);
+
+                // about to type password
+                driver.FindElement(By.XPath(@"//*[@id='password']/div[1]/div/div[1]/input")).SendKeys(gmailPwd);
+                driver.FindElement(By.XPath(@"//*[@id='passwordNext']/div/button/div[2]")).Click();
+
                 //var cookies = driver.Manage().Cookies.AllCookies;
             }
             catch (Exception e)

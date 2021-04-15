@@ -28,7 +28,7 @@ namespace ConsoleApp
             var proxyAuth = new ProxyAuth("64.137.72.147", 65233, "proxy", "C4t8TyP");
 
             // Don't await, have multiple drivers at once using the local proxy server
-            var driver = ChromeProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
+            var driver = GeckoProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
             //GeckoProxyDriver.Start(proxyAuth, _gmailUid, _gmailPwd);
             //StartSeleniumProxyServerFireFox(proxyServer, new ProxyAuth("64.137.72.147", 65233, "proxy", "C4t8TyP"));
             //StartSeleniumProxyServer(proxyServer, new ProxyAuth("64.137.72.147", 65233, "proxy", "C4t8TyP"));
